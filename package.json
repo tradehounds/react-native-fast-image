@@ -19,15 +19,9 @@
   },
   "license": "(MIT AND Apache-2.0)",
   "author": "Dylan Vann <dylan@dylanvann.com> (https://dylanvann.com)",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "scripts": {
-    "build": "dv-scripts build && cp src/index.js.flow dist/index.js.flow",
-    "lint": "dv-scripts lint",
-    "release": "dv-scripts release",
-    "test": "dv-scripts test"
-  },
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "typings": "src/index.d.ts",
   "prettier": {
     "semi": false,
     "singleQuote": true,
