@@ -45,6 +45,29 @@ RCT_EXPORT_METHOD(clearDiskCache)
     [SDImageCache.sharedImageCache clearDiskOnCompletion:^(){}];
 }
 
+RCT_EXPORT_METHOD(enableDiskCaching)
+{
+    NSUInteger m1 = [NSProcessInfo processInfo].physicalMemory;
+    NSLog(@"Physical memory available: %lu bytes", m1);
+    SDImageCache *cache = [SDImageCache sharedImageCache];
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    cache.config.maxMemoryCost = m1 / 2;
+    NSUInteger m2 = cache.config.maxMemoryCost;
+    NSLog(@"SDWebImage cache size: %lu bytes", m2);
+    
+    cache.config.maxDiskAge = 3600 * 24 * 7; // 1 Week
+    cache.config.shouldCacheImagesInMemory = NO; // Disable memory cache, may cause cell-reusing flash because disk query is async
+    cache.config.shouldUseWeakMemoryCache = NO; // Disable weak cache, may see blank when return from background because memory cache is purged under pressure
+    cache.config.diskCacheReadingOptions = NSDataReadingMappedIfSafe;
+    manager.optionsProcessor = [SDWebImageOptionsProcessor optionsProcessorWithBlock:^SDWebImageOptionsResult * _Nullable(NSURL * _Nullable url, SDWebImageOptions options, SDWebImageContext * _Nullable context) {
+         // Disable Force Decoding in global, may reduce the frame rate
+         options |= SDWebImageAvoidDecodeImage;
+         return [[SDWebImageOptionsResult alloc] initWithOptions:options context:context];
+     }];
+    NSLog(@"Disk caching enabled!");
+}
+
+
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getCachePath:(NSURL *)url)
 {
     NSString *cacheKey = [[SDWebImageManager sharedManager] cacheKeyForURL:url];

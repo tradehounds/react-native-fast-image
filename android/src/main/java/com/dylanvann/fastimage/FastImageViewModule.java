@@ -76,6 +76,10 @@ class FastImageViewModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void enableDiskCaching() {
+    }
+
+    @ReactMethod
     public void clearDiskCache() {
         final Activity activity = getCurrentActivity();
         if (activity == null) return;

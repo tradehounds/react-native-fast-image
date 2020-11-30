@@ -116,7 +116,11 @@ FastImage.preloadManager = (sources, onProgress, onComplete) => {
   }
 }
 
-FastImage.clearMemoryCache = () => {
+FastImage.enableDiskCaching = () => {
+  FastImageViewNativeModule.enableDiskCaching()
+}
+
+FastImage.enableDiskCaching = () => {
   FastImageViewNativeModule.clearMemoryCache()
 }
 

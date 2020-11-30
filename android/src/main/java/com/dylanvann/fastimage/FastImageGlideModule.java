@@ -10,6 +10,7 @@ import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool;
 import com.bumptech.glide.load.engine.cache.LruResourceCache;
 import com.bumptech.glide.load.engine.cache.MemorySizeCalculator;
+import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 
 // We need an AppGlideModule to be present for progress events to work.
 @GlideModule
@@ -22,5 +23,7 @@ public final class FastImageGlideModule extends AppGlideModule {
     builder.setMemoryCache(new LruResourceCache(calculator.getMemoryCacheSize() / 2));
     builder.setBitmapPool(new LruBitmapPool(calculator.getBitmapPoolSize() / 2));
     Log.i("GLIDE", String.valueOf(calculator.getMemoryCacheSize() / 2));
+    // int diskCacheSizeBytes = 1024 * 1024 * 100; // 100 MB
+    // builder.setDiskCache(new InternalCacheDiskCacheFactory(context, diskCacheSizeBytes));
   }
 }
