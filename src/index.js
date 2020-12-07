@@ -120,7 +120,7 @@ FastImage.enableDiskCaching = () => {
   FastImageViewNativeModule.enableDiskCaching()
 }
 
-FastImage.enableDiskCaching = () => {
+FastImage.clearMemoryCache = () => {
   FastImageViewNativeModule.clearMemoryCache()
 }
 
