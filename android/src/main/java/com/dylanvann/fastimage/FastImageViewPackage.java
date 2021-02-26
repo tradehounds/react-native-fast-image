@@ -12,10 +12,7 @@ import java.util.List;
 public class FastImageViewPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        List<NativeModule> modules = new ArrayList<>();
-        modules.add(new FastImageViewModule(reactContext));
-        modules.add(new FastImagePreloaderManager(reactContext));
-        return modules;
+        return Collections.<NativeModule>singletonList(new FastImagePreloaderModule(reactContext));
     }
 
     @Override

@@ -2,7 +2,6 @@
 #import "FFFastImagePreloader.h"
 #import "FFFastImageSource.h"
 
-
 @implementation FFFastImagePreloaderManager
 {
     bool _hasListeners;
@@ -56,8 +55,9 @@ RCT_EXPORT_MODULE(FastImagePreloaderManager);
                               @"id": id,
                               @"finished": [NSNumber numberWithLong:finishedCount],
                               @"total": [NSNumber numberWithLong:totalCount],
-                              @"url": imageURL.absoluteString,
+                              // @"url": imageURL.absoluteString,
                               @"cachePath": isCached ? [self getCachePath:imageURL] : [NSNull null]
+                              @"url": isCached ? imageURL.absoluteString : [NSNull null]
                               }];
 }
 
@@ -68,16 +68,16 @@ RCT_EXPORT_METHOD(createPreloader:(RCTPromiseResolveBlock)resolve rejecter:(RCTP
     resolve(preloader.id);
 }
 
-RCT_EXPORT_METHOD(preloadManager:(nonnull NSNumber*)preloaderId sources:(nonnull NSArray<FFFastImageSource *> *)sources) {
+RCT_EXPORT_METHOD(preload:(nonnull NSNumber*)preloaderId sources:(nonnull NSArray<FFFastImageSource *> *)sources) {
     NSMutableArray *urls = [NSMutableArray arrayWithCapacity:sources.count];
-
+    
     [sources enumerateObjectsUsingBlock:^(FFFastImageSource * _Nonnull source, NSUInteger idx, BOOL * _Nonnull stop) {
         [source.headers enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString* header, BOOL *stop) {
             [[SDWebImageDownloader sharedDownloader] setValue:header forHTTPHeaderField:key];
         }];
         [urls setObject:source.url atIndexedSubscript:idx];
     }];
-
+    
     FFFastImagePreloader* preloader = _preloaders[preloaderId];
     [preloader prefetchURLs:urls];
 }

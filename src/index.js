@@ -6,10 +6,15 @@ import {
   requireNativeComponent,
   StyleSheet,
 } from 'react-native'
-
 import preloaderManager from './preloaderManager'
 
 const FastImageViewNativeModule = NativeModules.FastImageView
+
+const styles = StyleSheet.create({
+  imageContainer: {
+    overflow: 'hidden',
+  },
+})
 
 function FastImageBase({
   source,
@@ -72,11 +77,6 @@ const FastImage = forwardRef((props, ref) => (
 
 FastImage.displayName = 'FastImage'
 
-const styles = StyleSheet.create({
-  imageContainer: {
-    overflow: 'hidden',
-  },
-})
 
 FastImage.resizeMode = {
   contain: 'contain',
@@ -130,6 +130,10 @@ FastImage.clearDiskCache = () => {
 
 FastImage.getCachePath = (url) => {
   return FastImageViewNativeModule.getCachePath(url)
+}
+
+FastImage.preload = (sources, onProgress, onComplete) => {
+    preloaderManager.preload(sources, onProgress, onComplete)
 }
 
 FastImage.defaultProps = {

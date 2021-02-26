@@ -126,11 +126,11 @@ export interface FastImageProperties {
 }
 
 export interface PreloadProgressHandler {
-    (loaded: number, total: number): void
+  (urls: string[], loaded: number, total: number): void
 }
 
 export interface PreloadCompletionHandler {
-    (loaded: number, skipped: number): void
+  (urls: string[], loaded: number, skipped: number): void
 }
 
 interface FastImageStatic extends React.ComponentClass<FastImageProperties> {
@@ -153,9 +153,7 @@ interface FastImageStatic extends React.ComponentClass<FastImageProperties> {
         web: FastImage.cacheControl.web
     }
 
-    preload(sources: FastImageSource[]): void
-
-    preloadManager(
+    preload(
         sources: FastImageSource[],
         onProgress?: PreloadProgressHandler,
         onComplete?: PreloadCompletionHandler,
@@ -167,7 +165,7 @@ interface FastImageStatic extends React.ComponentClass<FastImageProperties> {
 
     clearDiskCache(): void
 
-    getCachePath(url): String
+    getCachePath(url): string
 }
 
 declare var FastImage: FastImageStatic

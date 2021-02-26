@@ -36,7 +36,7 @@ class FastImagePreloaderListener implements RequestListener<File> {
         // o is whatever was passed to .load() = GlideURL, String, etc.
         Log.d(LOG, "Preload failed: " + o.toString());
         this.failed++;
-        this.dispatchProgress(null,null);
+        this.dispatchProgress(null, null);
         return false;
     }
 
@@ -62,10 +62,10 @@ class FastImagePreloaderListener implements RequestListener<File> {
 
     private void dispatchProgress(@Nullable String url,@Nullable String cachePath) {
         WritableMap params = Arguments.createMap();
+        params.putString("url", url);
         params.putInt("id", this.id);
         params.putInt("finished", this.succeeded + this.failed);
         params.putInt("total", this.total);
-        params.putString("url", url);
         params.putString("cachePath", cachePath);
         reactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
