@@ -2,6 +2,7 @@
 #import "FFFastImagePreloader.h"
 #import "FFFastImageSource.h"
 
+
 @implementation FFFastImagePreloaderManager
 {
     bool _hasListeners;
@@ -39,7 +40,11 @@ RCT_EXPORT_MODULE(FastImagePreloaderManager);
     NSNumber* id = ((FFFastImagePreloader*) imagePrefetcher).id;
     [_preloaders removeObjectForKey:id];
     [self sendEventWithName:@"fffastimage-complete"
-                       body:@{ @"id": id, @"finished": [NSNumber numberWithLong:totalCount], @"skipped": [NSNumber numberWithLong:skippedCount]}
+                       body:@{
+                           @"id": id,
+                           @"finished": [NSNumber numberWithLong:totalCount],
+                           @"skipped": [NSNumber numberWithLong:skippedCount],
+                       }
     ];
 }
 
@@ -49,16 +54,26 @@ RCT_EXPORT_MODULE(FastImagePreloaderManager);
               totalCount:(NSUInteger)totalCount
 {
     NSNumber* id = ((FFFastImagePreloader*) imagePrefetcher).id;
+    UIImage *image = [self getImage:imageURL];
+    CGFloat width;
+    CGFloat height;
+    if (image) {
+        width = image.size.width;
+        height = image.size.height;
+    }
+    
     BOOL isCached = [self isURLCached:imageURL];
     [self sendEventWithName:@"fffastimage-progress"
                        body:@{
                               @"id": id,
                               @"finished": [NSNumber numberWithLong:finishedCount],
                               @"total": [NSNumber numberWithLong:totalCount],
-                              // @"url": imageURL.absoluteString,
-                              @"cachePath": isCached ? [self getCachePath:imageURL] : [NSNull null]
-                              @"url": isCached ? imageURL.absoluteString : [NSNull null]
-                              }];
+                              @"url": imageURL.absoluteString,
+                              @"cachePath": isCached ? [self getCachePath:imageURL] : [NSNull null],
+                              @"width": image ? @(width) : [NSNull null],
+                              @"height": image ? @(height) : [NSNull null]
+                       }];
+    image = nil;
 }
 
 RCT_EXPORT_METHOD(createPreloader:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
@@ -68,16 +83,16 @@ RCT_EXPORT_METHOD(createPreloader:(RCTPromiseResolveBlock)resolve rejecter:(RCTP
     resolve(preloader.id);
 }
 
-RCT_EXPORT_METHOD(preload:(nonnull NSNumber*)preloaderId sources:(nonnull NSArray<FFFastImageSource *> *)sources) {
+RCT_EXPORT_METHOD(preloadManager:(nonnull NSNumber*)preloaderId sources:(nonnull NSArray<FFFastImageSource *> *)sources) {
     NSMutableArray *urls = [NSMutableArray arrayWithCapacity:sources.count];
-    
+
     [sources enumerateObjectsUsingBlock:^(FFFastImageSource * _Nonnull source, NSUInteger idx, BOOL * _Nonnull stop) {
         [source.headers enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString* header, BOOL *stop) {
             [[SDWebImageDownloader sharedDownloader] setValue:header forHTTPHeaderField:key];
         }];
         [urls setObject:source.url atIndexedSubscript:idx];
     }];
-    
+
     FFFastImagePreloader* preloader = _preloaders[preloaderId];
     [preloader prefetchURLs:urls];
 }
@@ -92,6 +107,11 @@ RCT_EXPORT_METHOD(preload:(nonnull NSNumber*)preloaderId sources:(nonnull NSArra
 - (nullable NSString*) getCachePath:(NSURL *)url {
     NSString *cacheKey = [[SDWebImageManager sharedManager] cacheKeyForURL:url];
     return [[SDImageCache sharedImageCache] cachePathForKey:cacheKey];
+}
+
+- (nullable UIImage*) getImage:(NSURL *)url {
+    NSString *cacheKey = [[SDWebImageManager sharedManager] cacheKeyForURL:url];
+    return [[SDImageCache sharedImageCache] imageFromCacheForKey:cacheKey];
 }
 
 @end
