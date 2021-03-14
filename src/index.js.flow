@@ -70,7 +70,7 @@ declare export default class FastImage extends React$Component<FastImageProps> {
     static preload: PreloadFn;
 }
 
-static preloadManager: PreloadFn;
+static preload: PreloadFn;
 static enableDiskCaching: () => void;
 static clearMemoryCache: () => void;
 static clearDiskCache: () => void;

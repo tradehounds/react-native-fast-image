@@ -103,17 +103,8 @@ FastImage.cacheControl = {
   cacheOnly: 'cacheOnly',
 }
 
-FastImage.preload = sources => {
-  FastImageViewNativeModule.preload(sources)
-}
-
-FastImage.preloadManager = (sources, onProgress, onComplete) => {
-  if (sources.length) {
-    preloaderManager.preloadManager(sources, onProgress, onComplete)
-  }
-  else {
-    onComplete()
-  }
+FastImage.preload = (sources, onProgress, onComplete) => {
+  preloaderManager.preload(sources, onProgress, onComplete)
 }
 
 FastImage.enableDiskCaching = () => {
@@ -130,10 +121,6 @@ FastImage.clearDiskCache = () => {
 
 FastImage.getCachePath = (url) => {
   return FastImageViewNativeModule.getCachePath(url)
-}
-
-FastImage.preload = (sources, onProgress, onComplete) => {
-    preloaderManager.preload(sources, onProgress, onComplete)
 }
 
 FastImage.defaultProps = {

@@ -54,13 +54,6 @@ RCT_EXPORT_MODULE(FastImagePreloaderManager);
               totalCount:(NSUInteger)totalCount
 {
     NSNumber* id = ((FFFastImagePreloader*) imagePrefetcher).id;
-    UIImage *image = [self getImage:imageURL];
-    CGFloat width;
-    CGFloat height;
-    if (image) {
-        width = image.size.width;
-        height = image.size.height;
-    }
     
     BOOL isCached = [self isURLCached:imageURL];
     [self sendEventWithName:@"fffastimage-progress"
@@ -70,10 +63,7 @@ RCT_EXPORT_MODULE(FastImagePreloaderManager);
                               @"total": [NSNumber numberWithLong:totalCount],
                               @"url": imageURL.absoluteString,
                               @"cachePath": isCached ? [self getCachePath:imageURL] : [NSNull null],
-                              @"width": image ? @(width) : [NSNull null],
-                              @"height": image ? @(height) : [NSNull null]
                        }];
-    image = nil;
 }
 
 RCT_EXPORT_METHOD(createPreloader:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
@@ -83,7 +73,7 @@ RCT_EXPORT_METHOD(createPreloader:(RCTPromiseResolveBlock)resolve rejecter:(RCTP
     resolve(preloader.id);
 }
 
-RCT_EXPORT_METHOD(preloadManager:(nonnull NSNumber*)preloaderId sources:(nonnull NSArray<FFFastImageSource *> *)sources) {
+RCT_EXPORT_METHOD(preload:(nonnull NSNumber*)preloaderId sources:(nonnull NSArray<FFFastImageSource *> *)sources) {
     NSMutableArray *urls = [NSMutableArray arrayWithCapacity:sources.count];
 
     [sources enumerateObjectsUsingBlock:^(FFFastImageSource * _Nonnull source, NSUInteger idx, BOOL * _Nonnull stop) {

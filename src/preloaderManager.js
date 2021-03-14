@@ -24,14 +24,14 @@ class PreloaderManager {
         })
     }
 
-    onProgress = ({ id, finished, total, url }) => {
+    onProgress = ({ id, finished, total, url, cachePath }) => {
         const instance = this._instances.get(id)
         // null is returned when url failed to load
         if (url) {
             instance.urls = [...instance.urls, url]
         }
         if (instance.onProgress) {
-            instance.onProgress(instance.urls, finished, total)
+            instance.onProgress(id, finished, total, url, cachePath)
         }
     }
 
