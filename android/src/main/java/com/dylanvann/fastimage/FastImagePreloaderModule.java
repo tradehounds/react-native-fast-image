@@ -19,6 +19,8 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.views.imagehelper.ImageSource;
 import java.io.File;
 
+import android.util.Log;
+
 class FastImagePreloaderModule extends ReactContextBaseJavaModule {
 
     private static final String REACT_CLASS = "FastImagePreloaderManager";
@@ -80,6 +82,7 @@ class FastImagePreloaderModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 Glide.get(activity.getApplicationContext()).clearMemory();
+                Log.i("GLIDE", "Memory cache cleared");
             }
         });
     }
@@ -94,6 +97,7 @@ class FastImagePreloaderModule extends ReactContextBaseJavaModule {
         if (activity == null) return;
 
         Glide.get(activity.getApplicationContext()).clearDiskCache();
+        Log.i("GLIDE", "Disk cache cleared");
     }
 
     /*@ReactMethod(isBlockingSynchronousMethod = true)

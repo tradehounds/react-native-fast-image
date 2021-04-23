@@ -24,11 +24,13 @@ RCT_REMAP_VIEW_PROPERTY(tintColor, imageColor, UIColor)
 RCT_EXPORT_METHOD(clearMemoryCache)
 {
     [SDImageCache.sharedImageCache clearMemory];
+    NSLog(@"Memory cache cleared");
 }
 
 RCT_EXPORT_METHOD(clearDiskCache)
 {
     [SDImageCache.sharedImageCache clearDiskOnCompletion:^(){}];
+    NSLog(@"Disk cache cleared");
 }
 
 RCT_EXPORT_METHOD(limitMemory)
