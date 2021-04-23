@@ -85,7 +85,7 @@ class FastImagePreloaderModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void enableDiskCaching() {
+    public void limitMemory() {
     }
 
     @ReactMethod

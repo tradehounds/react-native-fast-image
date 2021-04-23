@@ -159,7 +159,7 @@ interface FastImageStatic extends React.ComponentClass<FastImageProperties> {
         onComplete?: PreloadCompletionHandler,
     ): void
 
-    enableDiskCaching(): void
+    limitMemory(): void
     
 	  clearMemoryCache(): void
 
