@@ -4,7 +4,6 @@
 #import <SDWebImage/SDWebImageDownloader.h>
 
 #import <SDWebImage/SDWebImageTransition.h>
-#import <SDWebImage/FLAnimatedImageView+WebCache.h>
 #import <SDWebImage/UIView+WebCache.h>
 
 #import <React/RCTComponent.h>
