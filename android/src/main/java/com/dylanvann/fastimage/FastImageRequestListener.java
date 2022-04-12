@@ -30,6 +30,16 @@ public class FastImageRequestListener implements RequestListener<Drawable> {
         return resourceData;
     }
 
+    private static WritableMap mapFromError(@androidx.annotation.Nullable GlideException e) {
+        WritableMap errorData = new WritableNativeMap();
+        if (e == null) {
+            return errorData;
+        }
+        errorData.putInt("code", 0);
+        errorData.putString("description", e.getMessage());
+        return errorData;
+    }
+
     @Override
     public boolean onLoadFailed(@androidx.annotation.Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
         FastImageOkHttpProgressGlideModule.forget(key);
@@ -40,7 +50,7 @@ public class FastImageRequestListener implements RequestListener<Drawable> {
         ThemedReactContext context = (ThemedReactContext) view.getContext();
         RCTEventEmitter eventEmitter = context.getJSModule(RCTEventEmitter.class);
         int viewId = view.getId();
-        eventEmitter.receiveEvent(viewId, REACT_ON_ERROR_EVENT, new WritableNativeMap());
+        eventEmitter.receiveEvent(viewId, REACT_ON_ERROR_EVENT, mapFromError(e));
         eventEmitter.receiveEvent(viewId, REACT_ON_LOAD_END_EVENT, new WritableNativeMap());
         return false;
     }

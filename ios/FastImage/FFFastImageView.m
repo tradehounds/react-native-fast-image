@@ -196,7 +196,10 @@
 - (void)downloadImage:(FFFastImageSource *) source options:(SDWebImageOptions) options context:(SDWebImageContext *)context {
     __weak typeof(self) weakSelf = self; // Always use a weak reference to self in blocks
     
-    self.sd_imageTransition = SDWebImageTransition.fadeTransition;
+    if (_source.crossFade != nil) {
+      self.sd_imageTransition = SDWebImageTransition.fadeTransition;
+    }
+    
     [self sd_setImageWithURL:_source.url
             placeholderImage:nil
                      options:options
@@ -215,7 +218,10 @@
                         if (error) {
                             weakSelf.hasErrored = YES;
                                 if (weakSelf.onFastImageError) {
-                                    weakSelf.onFastImageError(@{});
+                                    weakSelf.onFastImageError(@{
+                                        @"code": @(error.code),
+                                        @"description": error.localizedDescription
+                                    });
                                 }
                                 if (weakSelf.onFastImageLoadEnd) {
                                     weakSelf.onFastImageLoadEnd(@{});

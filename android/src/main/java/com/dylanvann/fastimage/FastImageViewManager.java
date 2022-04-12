@@ -9,6 +9,7 @@ import android.os.Build;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
@@ -71,6 +72,11 @@ class FastImageViewManager extends SimpleViewManager<FastImageViewWithUrl> imple
             return;
         }
 
+        int crossFade = 0;
+        if (source.hasKey("crossFade")) {
+          crossFade = source.getInt("uri");
+        }
+
         //final GlideUrl glideUrl = FastImageViewConverter.getGlideUrl(view.getContext(), source);
         final FastImageSource imageSource = FastImageViewConverter.getImageSource(view.getContext(), source);
         final GlideUrl glideUrl = imageSource.getGlideUrl();
@@ -105,6 +111,7 @@ class FastImageViewManager extends SimpleViewManager<FastImageViewWithUrl> imple
                     //    - android.resource://
                     //    - data:image/png;base64
                     .load(imageSource.getSourceForLoad())
+                    .transition(DrawableTransitionOptions.withCrossFade(crossFade))
                     .apply(FastImageViewConverter.getOptions(context, imageSource, source))
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .listener(new FastImageRequestListener(key))
